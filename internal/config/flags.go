@@ -12,11 +12,17 @@ func Parse() Config {
 	flag.StringVar(&cfg.LocalListenAddr, "local", "127.0.0.1:8080", "Local dinleme adresi (host:port)")
 	flag.StringVar(&cfg.RemoteTargetAddr, "remote", "", "SSH üzerinden gidilecek hedef (host:port) örn: 127.0.0.1:80")
 
-	flag.StringVar(&cfg.KnownHostsPath, "known-hosts", "", "Known hosts dosya yolu (örn: ~/.ssh/known_hosts)")
+	flag.StringVar(&cfg.KnownHostsPath, "known-hosts", "~/.ssh/known_hosts", "Known hosts dosya yolu (örn: ~/.ssh/known_hosts)")
 	flag.BoolVar(&cfg.InsecureIgnoreHostKey, "insecure-ignore-host-key", false, "Host anahtar doğrulamasını atla (güvenli değil!)")
 	flag.IntVar(&cfg.KeepAliveSeconds, "keep-alive", 30, "SSH bağlantısı için keep-alive aralığı (saniye cinsinden)")
 	flag.BoolVar(&cfg.Verbose, "verbose", false, "Ayrıntılı çıktı")
+
+	flag.BoolVar(&cfg.AskPassphrase, "ask-passphrase", false, "Şifreli anahtar için passphrase sor")
+
 	flag.Parse()
+
+	cfg.KeyPath = expandHome(cfg.KeyPath)
+	cfg.KnownHostsPath = expandHome(cfg.KnownHostsPath)
 
 	return cfg
 }
